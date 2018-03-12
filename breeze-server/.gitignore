@@ -1,0 +1,3 @@
+*.pyc
+diffmatchpatch/diff_match_patch.py
+breezeapi/static
