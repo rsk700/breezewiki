@@ -1,0 +1,10 @@
+.diff-add
+{
+    background-color: lightgreen;
+}
+
+.diff-remove
+{
+    background-color: #F4A6AA;
+    text-decoration: line-through;
+}

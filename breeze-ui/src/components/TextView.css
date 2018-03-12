@@ -1,0 +1,61 @@
+.page-text p a
+{
+    text-decoration: none;
+}
+
+.page-text p button.btn-link:hover,
+.page-text p a:hover
+{
+    background-color: #FFB74D;
+    color: #333;
+}
+
+.page-text p button.btn-link:active,
+.page-text p a:active
+{
+    color: white;
+}
+
+.page-text h1,
+.page-text h2,
+.page-text h3,
+.page-text h4,
+.page-text h5,
+.page-text h1 a,
+.page-text h2 a,
+.page-text h3 a,
+.page-text h4 a,
+.page-text h5 a
+{
+    color: #263238;
+}
+
+div.block-edit-button-wrapper
+{
+    position: absolute;
+    display: none;
+    height: 0;
+}
+
+button.block-edit-button
+{
+    font-size: 18pt;
+    position: relative;
+    left: -2em;
+}
+
+button.block-edit-button span
+{
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+h1:hover div.block-edit-button-wrapper,
+h2:hover div.block-edit-button-wrapper,
+h3:hover div.block-edit-button-wrapper,
+h4:hover div.block-edit-button-wrapper,
+h5:hover div.block-edit-button-wrapper,
+div.text-paragraph:hover div.block-edit-button-wrapper
+{
+    display: inline-block;
+}

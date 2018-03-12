@@ -1,0 +1,48 @@
+div.footer-wrapper
+{
+    border-width: 2px;
+    border-style: solid none none none;
+    width: 100%;
+    border-color: #FFB74D;
+    margin-top: 1em;
+}
+
+div.footer-text
+{
+    padding-top: 1em;
+    padding-bottom: 2em;
+}
+
+div.page-column
+{
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+@media (max-width: 992px)
+{
+    div.menu-column
+    {
+        width: 100%;
+    }
+
+    div.page-column
+    {
+        width: 100%;
+    }
+}
+
+@media not all and (max-width: 992px)
+{
+    div.menu-column
+    {
+        float: left;
+        width: 10%;
+    }
+
+    div.page-column
+    {
+        width: 90%;
+        float: left;
+    }
+}

@@ -1,0 +1,40 @@
+h1.page-title
+{
+    margin-bottom: 0.3em;
+}
+
+div.page-title-wrapper
+{
+    border-width: 2px;
+    border-style: none none solid none;
+    width: 100%;
+    border-color: #FFB74D;
+    margin-bottom: 1.5em;
+}
+
+div.page-title-button-wrapper
+{
+    display: none;
+    position: absolute;
+    font-size: 61%;
+}
+button.page-title-button
+{
+    font-size: inherit;
+}
+
+.page-title:hover div.page-title-button-wrapper
+{
+    display: inline-block;
+}
+
+div.empty-notification
+{
+    color: lightgrey;
+    font-size: 40pt;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+

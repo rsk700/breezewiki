@@ -1,0 +1,23 @@
+.diff-block
+{
+    background-color: #FFF3E0;
+    padding: 0.5em;
+    margin-bottom: 3em;
+}
+
+.diff-create-time
+{
+    background-color: lightgrey;
+    padding: 0.2em;
+}
+
+.diff-text-wrapper
+{
+    padding: 0.2em;
+}
+
+.more-diffs-wrapper
+{
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
