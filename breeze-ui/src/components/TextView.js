@@ -5,7 +5,7 @@ import _ from 'lodash'
 import Link from '../containers/Link'
 import TextBlockEditor from '../containers/TextBlockEditor'
 import parse from '../parser'
-import { TOKEN_PARAGRAPH, TOKEN_SECTION, TOKEN_PARAGRAPH_TEXT_LINE, TOKEN_LINK, TOKEN_URL } from '../parser'
+import { TOKEN_PARAGRAPH, TOKEN_SECTION, TOKEN_PARAGRAPH_TEXT_LINE, TOKEN_FORMATTED_TEXT, TOKEN_LINK, TOKEN_URL } from '../parser'
 
 class TextView extends React.Component {
 
@@ -141,19 +141,32 @@ class TextView extends React.Component {
     return html;
   }
 
+  formatFormattedText(formattedText) {
+    return (
+      <pre class="formatted-text">
+        <code>{ formattedText.get('text') }</code>
+      </pre>
+    );
+  }
+
   formatParagraph(paragraph) {
     if (this.props.isEdit && paragraph.type === this.props.editTokenType && paragraph.start === this.props.editStart) {
       return <TextBlockEditor key={this.getKey()}></TextBlockEditor>;
     }
-    let textLines = _.filter(paragraph.nested, line => line.type === TOKEN_PARAGRAPH_TEXT_LINE);
-    textLines = _.map(textLines, line => {
-      return this.formatTextLine(line);
-    });
+    let paragraphBlock = _.reduce(paragraph.nested, (html, token) => {
+      if (token.type === TOKEN_PARAGRAPH_TEXT_LINE) {
+        html.push(this.formatTextLine(token));
+      }
+      else if (token.type === TOKEN_FORMATTED_TEXT) {
+        html.push(this.formatFormattedText(token));
+      }
+      return html;
+    }, []);
     return (
       <div className="text-paragraph" key={this.getKey()}>
         { this.showEditButton(paragraph) }
         <p key={this.getKey()}>
-          { textLines }
+          { paragraphBlock }
         </p>
       </div>
     );

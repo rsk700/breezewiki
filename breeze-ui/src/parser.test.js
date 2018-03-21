@@ -2,6 +2,7 @@ import {
   TOKEN_NEW_LINE,
   TOKEN_WORD,
   TOKEN_SPACE,
+  TOKEN_FORMATTED_TEXT,
   TOKEN_UNKNOWN,
   getNewLineTokens,
   getLinkStartTokens,
@@ -169,6 +170,14 @@ test('parse', () => {
   expect(tree.nested[0].nested[0].nested[0].nested[0].type).toBe('url');
   expect(tree.nested[0].nested[0].nested[0].nested[0].get('text')).toBe('url.com');
   expect(tree.nested[0].nested[0].nested[0].nested[0].get('url')).toBe('https://url.com');
+
+  tree = parse('```\naaa\n```');
+  expect(tree.nested[0].nested[0].nested[0].type).toBe(TOKEN_FORMATTED_TEXT);
+  expect(tree.nested[0].nested[0].nested[0].get('text')).toBe('aaa');
+
+  tree = parse('aaa\n\n```\naaa\nbbb\n```\n\nbbb');
+  expect(tree.nested[0].nested[1].nested[0].type).toBe(TOKEN_FORMATTED_TEXT);
+  expect(tree.nested[0].nested[1].nested[0].get('text')).toBe('aaa\nbbb');
 
   tree = parse('');
   expect(tree.nested).toBe(null);

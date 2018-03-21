@@ -59,3 +59,9 @@ div.text-paragraph:hover div.block-edit-button-wrapper
 {
     display: inline-block;
 }
+
+pre.formatted-text
+{
+    background-color: #FFF3E0;
+    border-color: #FFB74D;
+}

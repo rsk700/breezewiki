@@ -46,16 +46,19 @@ Now you can access wiki by opening url http://127.0.0.1:5000/ in browser
 
 Wiki syntax has markdown flavor, here is some exapmles of supported elements:
 
-```
-# Header level 1
+  # Header level 1
 
-Paragraph text. More text.
+  Paragraph text. More text.
 
-## Header level 2
+  ## Header level 2
 
-Paragaph text.
-New line in paragraph. url https://google.com
+  Paragaph text.
+  New line in paragraph. url https://google.com
 
-New paragraph text. Text ---> internal_link some other text.
-Text ---> internal link with multiple words <---
-```
+  New paragraph text. Text ---> internal_link some other text.
+  Text ---> internal link with multiple words <---
+
+  ```
+  preformatted
+  text
+  ```

@@ -16,9 +16,11 @@ export const TOKEN_PARAGRAPH_SEPARATOR = 'paragraph_separator';
 export const TOKEN_PARAGRAPH_TEXT_LINE = 'paragraph_text_line';
 export const TOKEN_LINK = 'link';
 export const TOKEN_URL = 'url';
+export const TOKEN_FORMATTED_TEXT = 'formatted_text';
 
 export const LINK_START = '--->';
 export const LINK_END = '<---';
+export const FORMATTED_TEXT_MARK = '```';
 
 let urlRe = /^(https?|ftp):\/\/([^\s]{3,1024})$/;
 
@@ -134,6 +136,13 @@ class TokenExplorer {
 
   noMoreTokens() {
     return !this.hasMoreTokens();
+  }
+
+  isLastOrCheck(check) {
+    if (this.nextToken() === null) {
+      return true;
+    }
+    return check(this);
   }
 
   takeUntil(check) {
@@ -486,12 +495,67 @@ function processParagraphTextLine(explorer) {
   return tokenFromTokens(nested, TOKEN_PARAGRAPH_TEXT_LINE, true);
 }
 
+function isFormattedTextEnd(explorer) {
+  let lineExplorer = new TokenExplorer(explorer.token().nested);
+  if (lineExplorer.noMoreTokens()) {
+    return false;
+  }
+  let checkLine = (
+    lineExplorer.token().text === FORMATTED_TEXT_MARK &&
+    lineExplorer.isLastOrCheck(e => e.nextToken().type === TOKEN_NEW_LINE)
+  );
+  return (
+    checkLine &&
+    explorer.token().type === TOKEN_TEXT_LINE &&
+    explorer.isLastOrCheck(e => e.nextToken().type === TOKEN_PARAGRAPH_SEPARATOR)
+  );
+}
+
+function isFormattedText(explorer) {
+  explorer = explorer.exploreFromHere();
+  let check = (
+    explorer.token().type === TOKEN_TEXT_LINE &&
+    explorer.token().nested.length === 2 &&
+    explorer.token().nested[0].text === FORMATTED_TEXT_MARK &&
+    explorer.token().nested[1].type === TOKEN_NEW_LINE
+  );
+  if (!check) {
+    return false;
+  }
+  explorer.pop();
+  while (explorer.hasMoreTokens()) {
+    if (isFormattedTextEnd(explorer)) {
+      return true;
+    }
+    explorer.pop();
+  }
+  return false;
+}
+
+function processFormattedText(explorer) {
+  let nested = [];
+  nested.push(explorer.pop());
+  while (!isFormattedTextEnd(explorer)) {
+    nested.push(explorer.pop());
+  }
+  nested.push(explorer.pop());
+  let token = tokenFromTokens(nested, TOKEN_FORMATTED_TEXT, true);
+  let text = _(nested).slice(1, -1).reduce((text, token) => text + token.text, '');
+  // removes end new line which always before end of formatted text mark
+  text = text.slice(0, -1);
+  token.set('text', text);
+  return token;
+}
+
 function processParagraph(explorer) {
   let nested = [];
   while (explorer.hasMoreTokens()) {
     if (explorer.token().type === TOKEN_PARAGRAPH_SEPARATOR) {
       nested.push(explorer.pop());
       break;
+    }
+    else if (isFormattedText(explorer)) {
+      nested.push(processFormattedText(explorer));
     }
     else if (explorer.token().type === TOKEN_TEXT_LINE) {
       nested.push(processParagraphTextLine(explorer));
@@ -584,6 +648,7 @@ export default function parse(text) {
   //      section
   //
   //  paragraph
+  //    formatted_text
   //    paragraph_text_line
   //      text
   //      link
