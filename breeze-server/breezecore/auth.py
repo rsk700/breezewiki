@@ -1,8 +1,9 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from breezecore import models as m
+from .corebase import CoreBase
 
 
-class Auth(object):
+class Auth(CoreBase):
 
     """Docstring for Auth. """
 
@@ -22,14 +23,6 @@ class Auth(object):
         if len(password) < Auth.PASSWORD_LENGTH:
             return False
         return True
-
-    def __init__(self, session):
-        """TODO: to be defined1.
-
-        :session: TODO
-
-        """
-        self.s = session
 
     def signin_user(self, name, email, password):
         """TODO: Docstring for signin_user.

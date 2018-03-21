@@ -1,17 +1,10 @@
 from breezecore import models as m
+from .corebase import CoreBase
 
 
-class Diffs(object):
+class Diffs(CoreBase):
 
     """Docstring for Diffs. """
-
-    def __init__(self, session):
-        """TODO: to be defined1.
-
-        :session: TODO
-
-        """
-        self.s = session
 
     def get_diffs(self, diff, depth, cursor=None):
         """TODO: Docstring for get_diffs.

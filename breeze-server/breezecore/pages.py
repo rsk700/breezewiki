@@ -2,19 +2,12 @@ import json
 from sqlalchemy.exc import IntegrityError
 from diffmatchpatch.diff_match_patch import diff_match_patch
 from breezecore import models as m
+from .corebase import CoreBase
 
 
-class Pages(object):
+class Pages(CoreBase):
 
     """Docstring for Pages. """
-
-    def __init__(self, session):
-        """TODO: to be defined1.
-
-        :session: TODO
-
-        """
-        self.s = session
 
     def create_page(self, user, title, text):
         """TODO: Docstring for create_page.
