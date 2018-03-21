@@ -496,6 +496,9 @@ function processParagraphTextLine(explorer) {
 }
 
 function isFormattedTextEnd(explorer) {
+  if (explorer.token().nested === null) {
+      return false;
+  }
   let lineExplorer = new TokenExplorer(explorer.token().nested);
   if (lineExplorer.noMoreTokens()) {
     return false;
