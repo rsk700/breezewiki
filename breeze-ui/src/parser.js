@@ -130,6 +130,12 @@ class TokenExplorer {
     }
   }
 
+  isType(type) {
+    if (this.hasMoreTokens()) {
+      return this.token().type === type;
+    }
+  }
+
   hasMoreTokens() {
     return this.token() !== null;
   }
@@ -143,6 +149,15 @@ class TokenExplorer {
       return true;
     }
     return check(this);
+  }
+
+  notLastAndCheck(check) {
+    if (this.nextToken() !== null) {
+      if (check(this)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   takeUntil(check) {
@@ -516,6 +531,9 @@ function isFormattedTextEnd(explorer) {
 
 function isFormattedText(explorer) {
   explorer = explorer.exploreFromHere();
+  if (explorer.noMoreTokens()) {
+    return false;
+  }
   let check = (
     explorer.token().type === TOKEN_TEXT_LINE &&
     explorer.token().nested.length === 2 &&
@@ -542,10 +560,14 @@ function processFormattedText(explorer) {
     nested.push(explorer.pop());
   }
   nested.push(explorer.pop());
-  let token = tokenFromTokens(nested, TOKEN_FORMATTED_TEXT, true);
-  let text = _(nested).slice(1, -1).reduce((text, token) => text + token.text, '');
+  let text = _(nested).slice(1, -1).reduce((text, t) => text + t.text, '');
   // removes end new line which always before end of formatted text mark
   text = text.slice(0, -1);
+  if (explorer.hasMoreTokens()) {
+    // here is paragraph separator which should be attached to block
+    nested.push(explorer.pop());
+  }
+  let token = tokenFromTokens(nested, TOKEN_FORMATTED_TEXT, true);
   token.set('text', text);
   return token;
 }
@@ -556,9 +578,6 @@ function processParagraph(explorer) {
     if (explorer.token().type === TOKEN_PARAGRAPH_SEPARATOR) {
       nested.push(explorer.pop());
       break;
-    }
-    else if (isFormattedText(explorer)) {
-      nested.push(processFormattedText(explorer));
     }
     else if (explorer.token().type === TOKEN_TEXT_LINE) {
       nested.push(processParagraphTextLine(explorer));
@@ -629,6 +648,9 @@ function processSection(level, explorer) {
         break;
       }
     }
+    else if (isFormattedText(explorer)) {
+      nested.push(processFormattedText(explorer));
+    }
     else {
       nested.push(processParagraph(explorer));
     }
@@ -648,10 +670,10 @@ export default function parse(text) {
   //    section (section can has title)
   //      title
   //      paragraph
+  //      formatted_text
   //      section
   //
   //  paragraph
-  //    formatted_text
   //    paragraph_text_line
   //      text
   //      link

@@ -55,7 +55,8 @@ h2:hover div.block-edit-button-wrapper,
 h3:hover div.block-edit-button-wrapper,
 h4:hover div.block-edit-button-wrapper,
 h5:hover div.block-edit-button-wrapper,
-div.text-paragraph:hover div.block-edit-button-wrapper
+div.text-paragraph:hover div.block-edit-button-wrapper,
+div.formatted-text:hover div.block-edit-button-wrapper
 {
     display: inline-block;
 }

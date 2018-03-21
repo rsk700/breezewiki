@@ -172,12 +172,12 @@ test('parse', () => {
   expect(tree.nested[0].nested[0].nested[0].nested[0].get('url')).toBe('https://url.com');
 
   tree = parse('```\naaa\n```');
-  expect(tree.nested[0].nested[0].nested[0].type).toBe(TOKEN_FORMATTED_TEXT);
-  expect(tree.nested[0].nested[0].nested[0].get('text')).toBe('aaa');
+  expect(tree.nested[0].nested[0].type).toBe(TOKEN_FORMATTED_TEXT);
+  expect(tree.nested[0].nested[0].get('text')).toBe('aaa');
 
   tree = parse('aaa\n\n```\naaa\nbbb\n```\n\nbbb');
-  expect(tree.nested[0].nested[1].nested[0].type).toBe(TOKEN_FORMATTED_TEXT);
-  expect(tree.nested[0].nested[1].nested[0].get('text')).toBe('aaa\nbbb');
+  expect(tree.nested[0].nested[1].type).toBe(TOKEN_FORMATTED_TEXT);
+  expect(tree.nested[0].nested[1].get('text')).toBe('aaa\nbbb');
 
   tree = parse('');
   expect(tree.nested).toBe(null);

@@ -142,23 +142,26 @@ class TextView extends React.Component {
   }
 
   formatFormattedText(formattedText) {
+    if (this.props.isEdit && formattedText.type === this.props.editTokenType && formattedText.start === this.props.editStart) {
+      return <TextBlockEditor key="block-editor"></TextBlockEditor>;
+    }
     return (
-      <pre class="formatted-text">
-        <code>{ formattedText.get('text') }</code>
-      </pre>
+      <div className="formatted-text" key={this.getKey()}>
+        { this.showEditButton(formattedText) }
+        <pre className="formatted-text">
+          <code>{ formattedText.get('text') }</code>
+        </pre>
+      </div>
     );
   }
 
   formatParagraph(paragraph) {
     if (this.props.isEdit && paragraph.type === this.props.editTokenType && paragraph.start === this.props.editStart) {
-      return <TextBlockEditor key={this.getKey()}></TextBlockEditor>;
+      return <TextBlockEditor key="block-editor"></TextBlockEditor>;
     }
     let paragraphBlock = _.reduce(paragraph.nested, (html, token) => {
       if (token.type === TOKEN_PARAGRAPH_TEXT_LINE) {
         html.push(this.formatTextLine(token));
-      }
-      else if (token.type === TOKEN_FORMATTED_TEXT) {
-        html.push(this.formatFormattedText(token));
       }
       return html;
     }, []);
@@ -175,19 +178,23 @@ class TextView extends React.Component {
   formatSection(section) {
     let html = [];
     if (this.props.isEdit && section.type === this.props.editTokenType && section.start === this.props.editStart) {
-      return <TextBlockEditor key={this.getKey()}></TextBlockEditor>;
+      return <TextBlockEditor key="block-editor"></TextBlockEditor>;
     }
     if (section.has('title')) {
       html.push(this.formatSectionTitle(section));
     }
-    let text = _.map(section.nested, token => {
+    let text = _.reduce(section.nested, (tokens, token) => {
       if (token.type === TOKEN_PARAGRAPH) {
-        return this.formatParagraph(token);
+        tokens.push(this.formatParagraph(token));
       }
       else if (token.type === TOKEN_SECTION) {
-        return this.formatSection(token);
+        tokens.push(this.formatSection(token));
       }
-    });
+      else if (token.type === TOKEN_FORMATTED_TEXT) {
+        tokens.push(this.formatFormattedText(token));
+      }
+      return tokens;
+    }, []);
     html = html.concat(text);
     return (
       <div key={this.getKey()}>
