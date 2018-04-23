@@ -28,7 +28,7 @@ const PageContainerView = ({children}) => {
           <div className="footer-wrapper">
             <footer>
               <div className="text-center footer-text">
-                <a href="">BreezeWiki</a>
+                <a href="https://github.com/rsk700/breezewiki">BreezeWiki</a>
               </div>
             </footer>
           </div>
